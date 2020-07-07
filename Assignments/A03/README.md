@@ -5,7 +5,7 @@
 ### Files:
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
-|   1   | [main.py](../main.py)        | Main file that launches the gui window             |
+|   1   | [main.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A03/main.py)        | Main file that launches the gui window             |
 ### Instructions:
 I coded my program in Visual Code and ran it from the Git Bash shell.
 You must make sure you are in the correct directory where your program is stored.
