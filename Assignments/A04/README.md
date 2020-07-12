@@ -6,7 +6,7 @@
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
 |   1   | [main.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/main.py)        | Main file that launches the gui window             |
-|   2   | [player_info.json](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/player_info.json)
+|   2   | [player_info.json](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/player_info.json) | Json file that contains the player info used to populate the gui window|
 ### Instructions:
 I coded my program in Visual Code and ran it from the Git Bash shell.
 You must make sure you are in the correct directory where your program is stored.
