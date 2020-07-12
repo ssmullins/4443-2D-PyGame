@@ -14,5 +14,5 @@ There is one parameter you could change to make the program display your name. O
 ### Example Command:
 - `python <code>`
 - `python main.py`
-### Example Output
+### Example Display
 <a href="https://imgur.com/FWYBIov"><img src="https://i.imgur.com/FWYBIov.png" title="source: imgur.com" /></a>
