@@ -14,7 +14,7 @@ To run the program type the command 'python main.py {json file name here}' in yo
 The only parameter to change for this program would be the file name you pass into it from the command line.
 The data in the json file can be changed but the program does look for the keys {fname, lname, rank, screen_name, email, power-boost, available-boost} so those should not change.
 ### Example Command:
-- 'python <code> <input_file>'
+- 'python {code} {input_file}'
 - 'python main.py player_info.json'
 ### Example Display:
 <a href="https://imgur.com/pfKejsL"><img src="https://i.imgur.com/pfKejsL.png" title="source: imgur.com" /></a>
