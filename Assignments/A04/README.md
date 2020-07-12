@@ -15,3 +15,5 @@ The only parameter to change for this program would be the file name you pass in
 The data in the json file can be changed but the program does look for the keys {fname, lname, rank, screen_name, email, power-boost, available-boost} so those should not change.
 ### Example Command:
 - 'python main.py player_info.json'
+### Example Display:
+https://imgur.com/pfKejsL
