@@ -12,4 +12,5 @@ You must make sure you are in the correct directory where your program is stored
 To run the program type the command 'python main.py' in your shell.
 There is one parameter you could change to make the program display your name. On line 22 hello_frame = HelloWorldFrame(root,"Samuel Mullins") change the second parameter in parethesis to your name.
 ### Example Command:
-- 'python main.py'
+- `python <code>`
+- `python main.py`
