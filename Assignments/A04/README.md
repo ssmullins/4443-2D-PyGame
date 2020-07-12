@@ -16,4 +16,4 @@ The data in the json file can be changed but the program does look for the keys 
 ### Example Command:
 - 'python main.py player_info.json'
 ### Example Display:
-https://imgur.com/pfKejsL
+<a href="https://imgur.com/pfKejsL"><img src="https://i.imgur.com/pfKejsL.png" title="source: imgur.com" /></a>
