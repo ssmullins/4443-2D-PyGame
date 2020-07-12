@@ -17,4 +17,4 @@ The data in the json file can be changed but the program does look for the keys 
 - `python <code> <input_file>`
 - `python main.py player_info.json`
 ### Example Display:
-<a href="https://imgur.com/pfKejsL"><img src="https://i.imgur.com/pfKejsL.png" title="source: imgur.com" /></a>
+<a href="https://imgur.com<a href="https://imgur.com/VLOOJA1"><img src="https://i.imgur.com/VLOOJA1.png" title="source: imgur.com" /></a>/pfKejsL"><img src="https://i.imgur.com/pfKejsL.png" title="source: imgur.com" /></a>
