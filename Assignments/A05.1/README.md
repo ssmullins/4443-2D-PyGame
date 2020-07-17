@@ -9,6 +9,7 @@
 |   2   | [helper_module.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/helper_module.py) | File containing code to help read in cmd line params|
 |   3   | [colors.json](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/colors.json) | Contains color names and hex values
 |   4   | [img](https://github.com/ssmullins/4443-2D-PyGame-Mullins/tree/master/Assignments/A05.1/img) | File containig images for player and background
+|   5   | [screenshots](https://github.com/ssmullins/4443-2D-PyGame-Mullins/tree/master/Assignments/A05.1/screenshots) | File containing game screenshots
 ### Instructions:
 I coded my program in Visual Code and ran it from the Git Bash shell.
 You must make sure you are in the correct directory where your program is stored.
