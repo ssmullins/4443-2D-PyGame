@@ -7,7 +7,7 @@ import pprint
 import json
 
 # Tells OS where to open the window
-os.environ['SDL_VIDEO_WINDOW_POS'] = str(1000) + "," + str(100)
+os.environ['SDL_VIDEO_WINDOW_POS'] = str(300) + "," + str(100)
 
 game_folder = os.path.dirname(__file__)
 img_folder = os.path.join(game_folder, 'img')
@@ -37,22 +37,34 @@ class Player(pygame.sprite.Sprite):
         self.y_speed = 5
 
     def update(self):
-        self.vx, self.vy = 0,0
-        keystate = pygame.key.get_pressed()
-        if keystate[pygame.K_UP]:
-            self.vy = -5
-        if keystate[pygame.K_DOWN]:
-            self.vy = 5
-        if keystate[pygame.K_LEFT]:
-            self.vx = -5
-        if keystate[pygame.K_RIGHT]:
-            self.vx = 5
-        if self.vx != 0 and self.vy !=0:
-            self.vx /= 1.414
-            self.vy /= 1.414
+            self.vx, self.vy = 0,0
+            keystate = pygame.key.get_pressed()
+            if keystate[pygame.K_UP] and self.check_collisions == (False,False):
+                self.vy = -5
+            if keystate[pygame.K_DOWN]:
+                self.vy = 5
+            if keystate[pygame.K_LEFT]:
+                self.vx = -5
+            if keystate[pygame.K_RIGHT]:
+                self.vx = 5
+            if self.vx != 0 and self.vy !=0:
+                self.vx /= 1.414
+                self.vy /= 1.414
 
-        self.rect.x += self.vx
-        self.rect.y += self.vy
+            self.rect.x += self.vx
+            self.rect.y += self.vy
+
+    def check_collisions(self):
+        hit_xbounds = False
+        hit_ybounds = False
+
+        if self.rect.right >= int(kwargs['width']) or self.rect.left <= 0:
+            hit_xbounds = True
+
+        if self.rect.top <= 0 or self.rect.bottom >= int(kwargs['height']):
+            hit_ybounds = True
+
+        return hit_xbounds, hit_ybounds
 
 def main(**kwargs):
     pygame.init()
