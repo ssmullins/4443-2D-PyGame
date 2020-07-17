@@ -7,7 +7,7 @@
 | :---: | --------------- | -------------------------------------------------- |
 |   1   | [game.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/main.py)        | Main file that launches the gui window             |
 |   2   | [helper_module.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/player_info.json) | Json file that contains the player info used to populate the gui window|
-|   3   | [colors.json]
+|   3   | [colors.json](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/colors.json) | Contains color names and hex values
 |   4   | [img]
 ### Instructions:
 I coded my program in Visual Code and ran it from the Git Bash shell.
