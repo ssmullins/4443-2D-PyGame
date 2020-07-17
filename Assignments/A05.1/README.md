@@ -19,6 +19,7 @@ Once the program is running in this stage of development all you can do is move 
 - `python <code>`
 - `python game.py title="My Game" igm_path=./images/player.png width=700 height=600 pwidth=75 pheight=90`
 ### Example Display:
+| # |
 [Gamepos1.png]
 [Gamepos2.png]
 [Gamepos3.png]
