@@ -19,6 +19,8 @@ Once the program is running in this stage of development all you can do is move 
 - `python <code>`
 - `python game.py title="My Game" igm_path=./images/player.png width=700 height=600 pwidth=75 pheight=90`
 ### Example Display:
-|[Gamepos1.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/GamePos1.PNG)|
-|[Gamepos2.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/Gamepos2.PNG)|
-|[Gamepos3.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/GamePos3.PNG)|
+ | File |
+ | :---: |
+ |[Gamepos1.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/GamePos1.PNG)|
+ |[Gamepos2.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/Gamepos2.PNG)|
+ |[Gamepos3.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/screenshots/GamePos3.PNG)|
