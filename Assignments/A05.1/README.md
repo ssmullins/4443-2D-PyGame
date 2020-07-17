@@ -21,4 +21,4 @@ Once the program is running in this stage of development all you can do is move 
 ### Example Display:
 |[GameImg1](https://imgur.com/MzjpM9Y"><img src="https://i.imgur.com/MzjpM9Y.png" title="source: imgur.com)|
 |[GameImg2]("https://imgur.com/xs6DaoA"><img src="https://i.imgur.com/xs6DaoA.png" title="source: imgur.com")|
-<a href="https://imgur.com/wSGS4t9"><img src="https://i.imgur.com/wSGS4t9.png" title="source: imgur.com" /></a>
+|[GameImg3](<a href="https://imgur.com/wSGS4t9"><img src="https://i.imgur.com/wSGS4t9.png" title="source: imgur.com" /></a>)
