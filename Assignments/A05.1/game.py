@@ -39,7 +39,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
             self.vx, self.vy = 0,0
             keystate = pygame.key.get_pressed()
-            if keystate[pygame.K_UP] and self.check_collisions == (False,False):
+            if keystate[pygame.K_UP]:
                 self.vy = -5
             if keystate[pygame.K_DOWN]:
                 self.vy = 5
