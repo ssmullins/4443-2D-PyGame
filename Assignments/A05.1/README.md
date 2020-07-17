@@ -19,6 +19,6 @@ Once the program is running in this stage of development all you can do is move 
 - `python <code>`
 - `python game.py title="My Game" igm_path=./images/player.png width=700 height=600 pwidth=75 pheight=90`
 ### Example Display:
-[GameImg1](https://imgur.com/MzjpM9Y"><img src="https://i.imgur.com/MzjpM9Y.png" title="source: imgur.com)
-[GameImg2]("https://imgur.com/xs6DaoA"><img src="https://i.imgur.com/xs6DaoA.png" title="source: imgur.com")
+|[GameImg1](https://imgur.com/MzjpM9Y"><img src="https://i.imgur.com/MzjpM9Y.png" title="source: imgur.com)|
+|[GameImg2]("https://imgur.com/xs6DaoA"><img src="https://i.imgur.com/xs6DaoA.png" title="source: imgur.com")|
 <a href="https://imgur.com/wSGS4t9"><img src="https://i.imgur.com/wSGS4t9.png" title="source: imgur.com" /></a>
