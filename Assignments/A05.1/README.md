@@ -6,7 +6,7 @@
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
 |   1   | [game.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/game.py) | Main file that launches the game |
-|   2   | [helper_module.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A04/player_info.json) | Json file that contains the player info used to populate the gui window|
+|   2   | [helper_module.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/helper_module.py) | File containing code to help read in cmd line params|
 |   3   | [colors.json](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/colors.json) | Contains color names and hex values
 |   4   | [img]
 ### Instructions:
