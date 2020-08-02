@@ -4,11 +4,11 @@ pygame.init()
 
 win = pygame.display.set_mode((500,500))
 pygame.display.set_caption("First Game")
-walkRight = [pygame.image.load('RedRight.png')]
-walkLeft = [pygame.image.load('RedLeft.png')]
-walkUp = [pygame.image.load('RedUp.png')]
-walkDown = [pygame.image.load('RedDown.png')]
-char = pygame.image.load('RedRight.png')
+walkRight = [pygame.image.load('Images/RedRight.png')]
+walkLeft = [pygame.image.load('Images/RedLeft.png')]
+walkUp = [pygame.image.load('Images/RedUp.png')]
+walkDown = [pygame.image.load('Images/RedDown.png')]
+char = pygame.image.load('Images/RedRight.png')
 screenRefresh = True
 
 clock = pygame.time.Clock()
@@ -84,7 +84,7 @@ class Player(object):
             win.blit(char, (self.x,self.y))
 
 class Orb(object):
-    floating = [pygame.image.load('Orb1.png'), pygame.image.load('Orb2.png'), pygame.image.load('Orb3.png'), pygame.image.load('Orb4.png'), pygame.image.load('Orb5.png')]
+    floating = [pygame.image.load('Images/Orb1.png'), pygame.image.load('Images/Orb2.png'), pygame.image.load('Images/Orb3.png'), pygame.image.load('Images/Orb4.png'), pygame.image.load('Images/Orb5.png')]
     
     def __init__(self):
         self.x = random.randrange(0,500)
@@ -131,7 +131,7 @@ orb2 = Orb()
 orb3 = Orb()
 orb4 = Orb()
 orb5 = Orb()
-setBackgroundImage( "background.png" )
+setBackgroundImage( "Images/background.png" )
 setAutoUpdate(False)
 
 
