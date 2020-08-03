@@ -22,3 +22,4 @@ Once the program is running in this stage of development all you can do is move 
  | :---: |
  |[Animation1.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/P01.3/Images/screenshot1.PNG)|
  |[Animation2.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/P01.3/Images/screenshot2.PNG)|
+ |[Animation3.png](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/P01.3/Images/screenshot3.PNG)|
