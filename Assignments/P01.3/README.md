@@ -16,7 +16,7 @@ To run the program type the command `python game_pt3.py
 Once the program is running in this stage of development all you can do is move your player around the window with the arrow keys on the keyboard.
 ### Example Command:
 - `python <code>`
-- `python game_pt2.py
+- `python game_pt3.py
 ### Example Display:
  | Screenshots |
  | :---: |
