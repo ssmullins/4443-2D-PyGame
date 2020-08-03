@@ -2,7 +2,10 @@ import pygame
 import random
 pygame.init()
 
-win = pygame.display.set_mode((500,500))
+gameWidth = 500
+gameHeight = 500
+
+win = pygame.display.set_mode((gameWidth,gameHeight))
 pygame.display.set_caption("First Game")
 walkRight = [pygame.image.load('Images/RedRight.png')]
 walkLeft = [pygame.image.load('Images/RedLeft.png')]
@@ -57,7 +60,7 @@ class Player(object):
         self.y = y
         self.width = width
         self.height = height
-        self.vel = 5
+        self.vel = 20
         self.left = False
         self.right = False 
         self.up = False
@@ -87,8 +90,8 @@ class Orb(object):
     floating = [pygame.image.load('Images/Orb1.png'), pygame.image.load('Images/Orb2.png'), pygame.image.load('Images/Orb3.png'), pygame.image.load('Images/Orb4.png'), pygame.image.load('Images/Orb5.png')]
     
     def __init__(self):
-        self.x = random.randrange(0,500)
-        self.y = random.randrange(0,500)
+        self.x = random.randrange(0,gameWidth)
+        self.y = random.randrange(0,gameHeight)
         self.orbNum = random.randrange(0,5)
 
     def draw(self,win):
@@ -125,7 +128,7 @@ def setBackgroundImage(img):
     background.setTiles(img)
 
 #Main Loop
-player = Player(300, 410, 64, 64)
+player = Player(gameWidth // 2, gameHeight // 2, 64, 64)
 orb1 = Orb()
 orb2 = Orb()
 orb3 = Orb()
@@ -147,7 +150,7 @@ while run:
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT] and player.x > player.vel:
-        #player.x -= player.vel
+        # player.x -= player.vel
         scrollBackground(5,0)
         player.left = True
         player.right = False
@@ -155,7 +158,7 @@ while run:
         player.down = False
 
     elif keys[pygame.K_RIGHT] and player.x < 500 - player.width - player.vel:
-        #player.x += player.vel
+        # player.x += player.vel
         scrollBackground(-5,0)
         player.left = False
         player.right = True
@@ -163,7 +166,7 @@ while run:
         player.down = False
 
     elif keys[pygame.K_UP] and player.y > player.vel:
-        #player.y -= player.vel
+        # player.y -= player.vel
         scrollBackground(0,5)
         player.left = False
         player.right = False
@@ -171,7 +174,7 @@ while run:
         player.down = False
 
     elif keys[pygame.K_DOWN] and player.y < 500 - player.height - player.vel:
-        #player.y += player.vel
+        # player.y += player.vel
         scrollBackground(0,-5)
         player.left = False
         player.right = False
