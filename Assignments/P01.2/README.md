@@ -6,7 +6,7 @@
 |   #   | File            | Description                                        |
 | :---: | --------------- | -------------------------------------------------- |
 |   1   | [game_pt2.py](https://github.com/ssmullins/4443-2D-PyGame-Mullins/blob/master/Assignments/A05.1/game.py) | Main file that launches the game |
-|   2   | [images](https://github.com/ssmullins/4443-2D-PyGame-Mullins/tree/master/Assignments/A05.1/img) | File containig images for player and background
+|   2   | [images](https://github.com/ssmullins/4443-2D-PyGame-Mullins/tree/master/Assignments/P01.2/Images) | File containig images for player and background
 |   3   | 
 |   4   | 
 |   5   | 
