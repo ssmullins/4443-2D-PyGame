@@ -7,11 +7,11 @@ gameHeight = 500
 
 win = pygame.display.set_mode((gameWidth,gameHeight))
 pygame.display.set_caption("First Game")
-walkRight = [pygame.image.load('Images/RedRight.png')]
-walkLeft = [pygame.image.load('Images/RedLeft.png')]
-walkUp = [pygame.image.load('Images/RedUp.png')]
-walkDown = [pygame.image.load('Images/RedDown.png')]
-char = pygame.image.load('Images/RedRight.png')
+walkRight = [pygame.image.load('Images/Frame1r.png'), pygame.image.load('Images/Frame2r.png'), pygame.image.load('Images/Frame3r.png'), pygame.image.load('Images/Frame4r.png'), pygame.image.load('Images/Frame5r.png'), pygame.image.load('Images/Frame6r.png'), pygame.image.load('Images/Frame7r.png'), pygame.image.load('Images/Frame8r.png')]
+walkLeft = [pygame.image.load('Images/Frame1l.png'), pygame.image.load('Images/Frame2l.png'), pygame.image.load('Images/Frame3l.png'), pygame.image.load('Images/Frame4l.png'), pygame.image.load('Images/Frame5l.png'), pygame.image.load('Images/Frame6l.png'), pygame.image.load('Images/Frame7l.png'), pygame.image.load('Images/Frame8l.png')]
+walkUp = [pygame.image.load('Images/Frame1u.png'), pygame.image.load('Images/Frame2u.png'), pygame.image.load('Images/Frame3u.png'), pygame.image.load('Images/Frame4u.png'), pygame.image.load('Images/Frame5u.png'), pygame.image.load('Images/Frame6u.png'), pygame.image.load('Images/Frame7u.png'), pygame.image.load('Images/Frame8u.png')]
+walkDown = [pygame.image.load('Images/Frame1d.png'), pygame.image.load('Images/Frame2d.png'), pygame.image.load('Images/Frame3d.png'), pygame.image.load('Images/Frame4d.png'), pygame.image.load('Images/Frame5d.png'), pygame.image.load('Images/Frame6d.png'), pygame.image.load('Images/Frame7d.png'), pygame.image.load('Images/Frame8d.png')]
+char = pygame.image.load('Images/Frame1r.png')
 screenRefresh = True
 
 clock = pygame.time.Clock()
@@ -68,20 +68,21 @@ class Player(object):
         self.walkCount = 0
 
     def draw(self,win):
-        if self.walkCount + 1 >= 15:
+        global walkCount
+        if self.walkCount + 1 >= 33:
             self.walkCount = 0
 
         if self.left:
-            win.blit(walkLeft[0], (self.x,self.y))
+            win.blit(walkLeft[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
         elif self.right:
-            win.blit(walkRight[0], (self.x,self.y))
+            win.blit(walkRight[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
         elif self.up:
-            win.blit(walkUp[0], (self.x,self.y))
+            win.blit(walkUp[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
         elif self.down:
-            win.blit(walkDown[0], (self.x,self.y))
+            win.blit(walkDown[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
         else:
             win.blit(char, (self.x,self.y))
@@ -105,6 +106,7 @@ def redrawGameWindow():
     orb3.draw(win)
     orb4.draw(win)
     orb5.draw(win)
+
     pygame.display.update()
 
 def scrollBackground(x,y):
@@ -141,7 +143,7 @@ setAutoUpdate(False)
 
 run = True
 while run:
-    clock.tick(15)
+    clock.tick(33)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:

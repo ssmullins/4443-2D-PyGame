@@ -37,22 +37,22 @@ class Player(pygame.sprite.Sprite):
         self.y_speed = 5
 
     def update(self):
-            self.vx, self.vy = 0,0
-            keystate = pygame.key.get_pressed()
-            if keystate[pygame.K_UP]:
-                self.vy = -5
-            if keystate[pygame.K_DOWN]:
-                self.vy = 5
-            if keystate[pygame.K_LEFT]:
-                self.vx = -5
-            if keystate[pygame.K_RIGHT]:
-                self.vx = 5
-            if self.vx != 0 and self.vy !=0:
-                self.vx /= 1.414
-                self.vy /= 1.414
+        self.vx, self.vy = 0,0
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_UP]:
+            self.vy = -5
+        if keystate[pygame.K_DOWN]:
+            self.vy = 5
+        if keystate[pygame.K_LEFT]:
+            self.vx = -5
+        if keystate[pygame.K_RIGHT]:
+            self.vx = 5
+        if self.vx != 0 and self.vy !=0:
+            self.vx /= 1.414
+            self.vy /= 1.414
 
-            self.rect.x += self.vx
-            self.rect.y += self.vy
+        self.rect.x += self.vx
+        self.rect.y += self.vy
 
     def check_collisions(self):
         hit_xbounds = False
