@@ -2,10 +2,12 @@ import pygame
 import random
 pygame.init()
 
+#Sets with and height of the game window. Needs to be changed to params that can be passed in by the user
 gameWidth = 500
 gameHeight = 500
-
 win = pygame.display.set_mode((gameWidth,gameHeight))
+
+#Storing the pictures used for animating the sprite
 pygame.display.set_caption("First Game")
 walkRight = [pygame.image.load('Images/Frame1r.png'), pygame.image.load('Images/Frame2r.png'), pygame.image.load('Images/Frame3r.png'), pygame.image.load('Images/Frame4r.png'), pygame.image.load('Images/Frame5r.png'), pygame.image.load('Images/Frame6r.png'), pygame.image.load('Images/Frame7r.png'), pygame.image.load('Images/Frame8r.png')]
 walkLeft = [pygame.image.load('Images/Frame1l.png'), pygame.image.load('Images/Frame2l.png'), pygame.image.load('Images/Frame3l.png'), pygame.image.load('Images/Frame4l.png'), pygame.image.load('Images/Frame5l.png'), pygame.image.load('Images/Frame6l.png'), pygame.image.load('Images/Frame7l.png'), pygame.image.load('Images/Frame8l.png')]
@@ -16,10 +18,12 @@ screenRefresh = True
 
 clock = pygame.time.Clock()
 
+#Class used for setting the background and scrolling it
 class Background():
     def __init__(self):
         self.dimensions = 0
 
+    #Sets the background
     def setTiles(self,tiles):
         if type(tiles) is str:
             self.tiles = [[pygame.image.load(tiles)]]
@@ -37,6 +41,7 @@ class Background():
         win.blit(self.tiles[0][0],[0,0])
         self.surface = win.copy()
 
+    #Scrolls the background image. Right now it is infinite but there needs to be borders.
     def scroll(self,x,y):
         self.stagePosX -= x
         self.stagePosY -= y
@@ -54,6 +59,7 @@ class Background():
 
         self.surface = win.copy()
 
+#Player class used to create a player. Some params need to be set by the user.
 class Player(object):
     def __init__(self, x, y, width, height):
         self.x = x
@@ -66,27 +72,35 @@ class Player(object):
         self.up = False
         self.down = False
         self.walkCount = 0
+        self.lastDir = walkRight
 
+    #Draws the player to the screen and animates them moving.
     def draw(self,win):
         global walkCount
-        if self.walkCount + 1 >= 33:
+        global lastDir
+        if self.walkCount + 1 >= 33: #33 is the number of sprites 4 multiplied by the number of frames for each direction of movment 8 + 1
             self.walkCount = 0
 
         if self.left:
-            win.blit(walkLeft[self.walkCount // 4], (self.x,self.y))
+            win.blit(walkLeft[self.walkCount // 4], (self.x,self.y)) #Diving walkCount by 4 the number of sprites so the animation is smooth
             self.walkCount += 1
+            self.lastDir = walkLeft
         elif self.right:
             win.blit(walkRight[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
+            self.lastDir = walkRight
         elif self.up:
             win.blit(walkUp[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
+            self.lastDir = walkUp
         elif self.down:
             win.blit(walkDown[self.walkCount // 4], (self.x,self.y))
             self.walkCount += 1
+            self.lastDir = walkDown
         else:
-            win.blit(char, (self.x,self.y))
+            win.blit(self.lastDir[self.walkCount // 4], (self.x,self.y))
 
+#This class creates orbs on the map. Currently not finished the orbs move when the player moves but must be stationary. Also need to code the use
 class Orb(object):
     floating = [pygame.image.load('Images/Orb1.png'), pygame.image.load('Images/Orb2.png'), pygame.image.load('Images/Orb3.png'), pygame.image.load('Images/Orb4.png'), pygame.image.load('Images/Orb5.png')]
     
@@ -98,6 +112,7 @@ class Orb(object):
     def draw(self,win):
         win.blit(self.floating[self.orbNum], (self.x, self.y))
 
+#Creating player and orbs. Need to find more efficient way to create large amounts of orbs.
 def redrawGameWindow():
     # win.blit(background, (0,0))
     player.draw(win)
@@ -109,14 +124,17 @@ def redrawGameWindow():
 
     pygame.display.update()
 
+#Scroll the background
 def scrollBackground(x,y):
     global background
     background.scroll(x,y)
 
+#Updates the screen
 def setAutoUpdate(val):
     global screenRefresh
     screenRefresh = val
 
+#Sets the background image 
 def setBackgroundImage(img):
     global bgSurface, backgroundImage
     surf = pygame.image.load(img)
@@ -129,7 +147,7 @@ def setBackgroundImage(img):
     background = Background()
     background.setTiles(img)
 
-#Main Loop
+#Main Loop, Player looks a little off center currently. Bad way to create orbs
 player = Player(gameWidth // 2, gameHeight // 2, 64, 64)
 orb1 = Orb()
 orb2 = Orb()
@@ -143,12 +161,13 @@ setAutoUpdate(False)
 
 run = True
 while run:
-    clock.tick(33)
+    clock.tick(33) #33 is the same as before 4*8+1
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
 
+    #This is where the tracking of key pressing and controlling the direction of the charachter happens
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_LEFT] and player.x > player.vel:
