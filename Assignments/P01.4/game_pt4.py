@@ -1,249 +1,553 @@
+from __future__ import division
 import pygame
 import random
+from os import path
+
+## assets folder
+img_dir = path.join(path.dirname(__file__), 'assets')
+sound_folder = path.join(path.dirname(__file__), 'sounds')
+
+## to be placed in "constant.py" later
+WIDTH = 480
+HEIGHT = 600
+FPS = 60
+POWERUP_TIME = 5000
+BAR_LENGTH = 100
+BAR_HEIGHT = 10
+
+# Define Colors 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+
+## to placed in "__init__.py" later
+## initialize pygame and create window
 pygame.init()
+pygame.mixer.init()  ## For sound
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Griffin Shoot")
+clock = pygame.time.Clock()     ## For syncing the FPS
 
-#Sets with and height of the game window. Needs to be changed to params that can be passed in by the user
-gameWidth = 500
-gameHeight = 500
-win = pygame.display.set_mode((gameWidth,gameHeight))
 
-#Storing the pictures used for animating the sprite
-pygame.display.set_caption("First Game")
-walkRight = [pygame.image.load('Images/Frame1r.png'), pygame.image.load('Images/Frame2r.png'), pygame.image.load('Images/Frame3r.png'), pygame.image.load('Images/Frame4r.png'), pygame.image.load('Images/Frame5r.png'), pygame.image.load('Images/Frame6r.png'), pygame.image.load('Images/Frame7r.png'), pygame.image.load('Images/Frame8r.png')]
-walkLeft = [pygame.image.load('Images/Frame1l.png'), pygame.image.load('Images/Frame2l.png'), pygame.image.load('Images/Frame3l.png'), pygame.image.load('Images/Frame4l.png'), pygame.image.load('Images/Frame5l.png'), pygame.image.load('Images/Frame6l.png'), pygame.image.load('Images/Frame7l.png'), pygame.image.load('Images/Frame8l.png')]
-walkUp = [pygame.image.load('Images/Frame1u.png'), pygame.image.load('Images/Frame2u.png'), pygame.image.load('Images/Frame3u.png'), pygame.image.load('Images/Frame4u.png'), pygame.image.load('Images/Frame5u.png'), pygame.image.load('Images/Frame6u.png'), pygame.image.load('Images/Frame7u.png'), pygame.image.load('Images/Frame8u.png')]
-walkDown = [pygame.image.load('Images/Frame1d.png'), pygame.image.load('Images/Frame2d.png'), pygame.image.load('Images/Frame3d.png'), pygame.image.load('Images/Frame4d.png'), pygame.image.load('Images/Frame5d.png'), pygame.image.load('Images/Frame6d.png'), pygame.image.load('Images/Frame7d.png'), pygame.image.load('Images/Frame8d.png')]
-char = pygame.image.load('Images/Frame1r.png')
-screenRefresh = True
+font_name = pygame.font.match_font('arial')
 
-clock = pygame.time.Clock()
+def main_menu():
+    global screen
 
-#Class used for setting the background and scrolling it
-class Background():
-    def __init__(self):
-        self.dimensions = 0
+    menu_song = pygame.mixer.music.load(path.join(sound_folder, "menu.wav"))
+    pygame.mixer.music.play(-1)
 
-    #Sets the background
-    def setTiles(self,tiles):
-        if type(tiles) is str:
-            self.tiles = [[pygame.image.load(tiles)]]
-            self.dimensions = 0
-        elif type(tiles[0]) is str:
-            self.tiles = [[pygame.image.load(i) for i in tiles],None]
-            self.dimensions = 1
-        else:
-            self.tiles = [ [pygame.image.load(i) for i in row] for row in tiles]
-            self.dimensions = 2
-        self.stagePosX = 0
-        self.stagePosY = 0
-        self.tileWidth = self.tiles[0][0].get_width()
-        self.tileHeight = self.tiles[0][0].get_height()
-        win.blit(self.tiles[0][0],[0,0])
-        self.surface = win.copy()
+    title = pygame.image.load(path.join(img_dir, "background1.png")).convert()
+    title = pygame.transform.scale(title, (WIDTH, HEIGHT), screen)
 
-    #Scrolls the background image. Right now it is infinite but there needs to be borders.
-    def scroll(self,x,y):
-        self.stagePosX -= x
-        self.stagePosY -= y
-        col = (self.stagePosX % (self.tileWidth * len(self.tiles[0]))) // self.tileWidth
-        xOff = (0 - self.stagePosX%self.tileWidth)
-        row = (self.stagePosY % (self.tileHeight * len(self.tiles))) // self.tileHeight
-        yOff = (0 - self.stagePosY % self.tileHeight)
-
-        col2 = ((self.stagePosX + self.tileWidth) % (self.tileWidth * len(self.tiles[0]))) // self.tileWidth
-        row2 = ((self.stagePosY + self.tileHeight) % (self.tileHeight * len(self.tiles))) // self.tileHeight
-        win.blit(self.tiles[row][col], [xOff, yOff])
-        win.blit(self.tiles[row][col2], [xOff + self.tileWidth, yOff])
-        win.blit(self.tiles[row2][col], [xOff, yOff+self.tileHeight])
-        win.blit(self.tiles[row2][col2], [xOff + self.tileWidth, yOff + self.tileHeight])
-
-        self.surface = win.copy()
-
-#Player class used to create a player. Some params need to be set by the user.
-class Player(object):
-    def __init__(self, x, y, width, height):
-        self.x = x
-        self.y = y
-        self.width = width
-        self.height = height
-        self.vel = 20
-        self.left = False
-        self.right = False 
-        self.up = False
-        self.down = False
-        self.walkCount = 0
-        self.lastDir = walkRight
-
-    #Draws the player to the screen and animates them moving.
-    def draw(self,win):
-        global walkCount
-        global lastDir
-        if self.walkCount + 1 >= 33: #33 is the number of sprites 4 multiplied by the number of frames for each direction of movment 8 + 1
-            self.walkCount = 0
-
-        if self.left:
-            win.blit(walkLeft[self.walkCount // 4], (self.x,self.y)) #Diving walkCount by 4 the number of sprites so the animation is smooth
-            self.walkCount += 1
-            self.lastDir = walkLeft
-        elif self.right:
-            win.blit(walkRight[self.walkCount // 4], (self.x,self.y))
-            self.walkCount += 1
-            self.lastDir = walkRight
-        elif self.up:
-            win.blit(walkUp[self.walkCount // 4], (self.x,self.y))
-            self.walkCount += 1
-            self.lastDir = walkUp
-        elif self.down:
-            win.blit(walkDown[self.walkCount // 4], (self.x,self.y))
-            self.walkCount += 1
-            self.lastDir = walkDown
-        else:
-            win.blit(self.lastDir[self.walkCount // 4], (self.x,self.y))
-
-#This class creates orbs on the map. Currently not finished the orbs move when the player moves but must be stationary. Also need to code the use
-class Orb(object):
-    floating = [pygame.image.load('Images/Orb1.png'), pygame.image.load('Images/Orb2.png'), pygame.image.load('Images/Orb3.png'), pygame.image.load('Images/Orb4.png'), pygame.image.load('Images/Orb5.png')]
-    
-    def __init__(self):
-        self.x = random.randrange(0,gameWidth)
-        self.y = random.randrange(0,gameHeight)
-        self.orbNum = random.randrange(0,5)
-
-    def draw(self,win):
-        win.blit(self.floating[self.orbNum], (self.x, self.y))
-
-class projectile(object):
-    bulletPic = [pygame.image.load('Images/Bullet1.png'), pygame.image.load('Images/Bullet2.png'), pygame.image.load('Images/Bullet3.png'), pygame.image.load('Images/Bullet4.png')]
-
-    def __init__(self, x, y, facing):
-        self.x = x 
-        self.y = y
-        self.facing = facing
-        self.vel = 8 * facing
-
-    def draw(self, win):
-        if player.right:
-            win.blit(self.bulletPic[1], (self.x, self.y))
-        elif player.left:
-            win.blit(self.bulletPic[0], (self.x, self.y))
-        elif player.up:
-            win.blit(self.bulletPic[2], (self.x, self.y))
-        elif player.down:
-            win.blit(self.bulletPic[3], (self.x, self.y))
-
-#Creating player and orbs. Need to find more efficient way to create large amounts of orbs.
-def redrawGameWindow():
-    # win.blit(background, (0,0))
-    player.draw(win)
-    # orb1.draw(win)
-    # orb2.draw(win)
-    # orb3.draw(win)
-    # orb4.draw(win)
-    # orb5.draw(win)
-    for bullet in bullets:
-        bullet.draw(win) 
-
+    screen.blit(title, (0,0))
     pygame.display.update()
 
-#Scroll the background
-def scrollBackground(x,y):
-    global background
-    background.scroll(x,y)
+    while True:
+        ev = pygame.event.poll()
+        if ev.type == pygame.KEYDOWN:
+            if ev.key == pygame.K_RETURN:
+                break
+            elif ev.key == pygame.K_q:
+                pygame.quit()
+                quit()
+        elif ev.type == pygame.QUIT:
+                pygame.quit()
+                quit() 
+        else:
+            draw_text(screen, "To Shoot Griffin Heads Press Enter", 30, WIDTH/2, HEIGHT/2)
+            draw_text(screen, "Quitters press Q", 30, WIDTH/2, (HEIGHT/2)+40)
+            pygame.display.update()
 
-#Updates the screen
-def setAutoUpdate(val):
-    global screenRefresh
-    screenRefresh = val
+    #pygame.mixer.music.stop()
+    ready = pygame.mixer.Sound(path.join(sound_folder,'getReady.wav'))
+    ready.play()
+    screen.fill(BLACK)
+    draw_text(screen, "Kid Screaming", 40, WIDTH/2, HEIGHT/2)
+    pygame.display.update()
+    
 
-#Sets the background image 
-def setBackgroundImage(img):
-    global bgSurface, backgroundImage
-    surf = pygame.image.load(img)
-    backgroundImage = surf
-    win.blit(surf, [0, 0])
-    bgSurface = win.copy()
-    if screenRefresh:
-        pygame.display.update()
-    global background
-    background = Background()
-    background.setTiles(img)
-
-#Main Loop, Player looks a little off center currently. Bad way to create orbs
-player = Player(gameWidth // 2, gameHeight // 2, 64, 64)
-# orb1 = Orb()
-# orb2 = Orb()
-# orb3 = Orb()
-# orb4 = Orb()
-# orb5 = Orb()
-bullets = []
-setBackgroundImage( "Images/background.png" )
-setAutoUpdate(False)
+def draw_text(surf, text, size, x, y):
+    ## selecting a cross platform font to display the score
+    font = pygame.font.Font(font_name, size)
+    text_surface = font.render(text, True, WHITE)       ## True denotes the font to be anti-aliased 
+    text_rect = text_surface.get_rect()
+    text_rect.midtop = (x, y)
+    surf.blit(text_surface, text_rect)
 
 
+def draw_shield_bar(surf, x, y, pct):
+    # if pct < 0:
+    #     pct = 0
+    pct = max(pct, 0) 
+    ## moving them to top
+    # BAR_LENGTH = 100
+    # BAR_HEIGHT = 10
+    fill = (pct / 100) * BAR_LENGTH
+    outline_rect = pygame.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+    fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+    pygame.draw.rect(surf, GREEN, fill_rect)
+    pygame.draw.rect(surf, WHITE, outline_rect, 2)
 
-run = True
-while run:
-    clock.tick(33) #33 is the same as before 4*8+1
 
-    for event in pygame.event.get():
+def draw_lives(surf, x, y, lives, img):
+    for i in range(lives):
+        img_rect= img.get_rect()
+        img_rect.x = x + 30 * i
+        img_rect.y = y
+        surf.blit(img, img_rect)
+
+
+
+def newmob():
+    mob_element = Mob()
+    all_sprites.add(mob_element)
+    mobs.add(mob_element)
+
+class Explosion(pygame.sprite.Sprite):
+    def __init__(self, center, size):
+        pygame.sprite.Sprite.__init__(self)
+        self.size = size
+        self.image = explosion_anim[self.size][0]
+        self.rect = self.image.get_rect()
+        self.rect.center = center
+        self.frame = 0 
+        self.last_update = pygame.time.get_ticks()
+        self.frame_rate = 75
+
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.frame += 1
+            if self.frame == len(explosion_anim[self.size]):
+                self.kill()
+            else:
+                center = self.rect.center
+                self.image = explosion_anim[self.size][self.frame]
+                self.rect = self.image.get_rect()
+                self.rect.center = center
+
+
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        ## scale the player img down
+        self.image = pygame.transform.scale(player_img, (55, 55))
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        self.radius = 20
+        self.rect.centerx = WIDTH / 2
+        self.rect.bottom = HEIGHT - 10
+        self.speedx = 0
+        self.speedy = 0
+        self.shield = 100
+        self.shoot_delay = 250
+        self.last_shot = pygame.time.get_ticks()
+        self.lives = 3
+        self.hidden = False
+        self.hide_timer = pygame.time.get_ticks()
+        self.power = 1
+        self.power_timer = pygame.time.get_ticks()
+
+    def update(self):
+        ## time out for powerups
+        if self.power >=2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+            self.power -= 1
+            self.power_time = pygame.time.get_ticks()
+
+        ## unhide 
+        if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
+            self.hidden = False
+            self.rect.centerx = WIDTH / 2
+            self.rect.bottom = HEIGHT - 30
+
+        self.speedx = 0     ## makes the player static in the screen by default. 
+        self.speedy = 0
+        # then we have to check whether there is an event hanlding being done for the arrow keys being 
+        ## pressed 
+
+        ## will give back a list of the keys which happen to be pressed down at that moment
+        keystate = pygame.key.get_pressed()     
+        if keystate[pygame.K_LEFT]:
+            self.speedx = -5
+        elif keystate[pygame.K_RIGHT]:
+            self.speedx = 5
+        elif keystate[pygame.K_UP]:
+            self.speedy = -5
+        elif keystate[pygame.K_DOWN]:
+            self.speedy = 5
+
+        #Fire weapons by holding spacebar
+        if keystate[pygame.K_SPACE]:
+            self.shoot()
+
+        ## check for the borders at the left and right
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+        if self.rect.left < 0:
+            self.rect.left = 0
+
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+
+    def shoot(self):
+        ## to tell the bullet where to spawn
+        now = pygame.time.get_ticks()
+        if now - self.last_shot > self.shoot_delay:
+            self.last_shot = now
+            if self.power == 1:
+                bullet = Bullet(self.rect.centerx, self.rect.top)
+                all_sprites.add(bullet)
+                bullets.add(bullet)
+                shooting_sound.play()
+            if self.power == 2:
+                bullet1 = Bullet(self.rect.left, self.rect.centery)
+                bullet2 = Bullet(self.rect.right, self.rect.centery)
+                all_sprites.add(bullet1)
+                all_sprites.add(bullet2)
+                bullets.add(bullet1)
+                bullets.add(bullet2)
+                shooting_sound.play()
+
+            """ MOAR POWAH """
+            if self.power >= 3:
+                bullet1 = Bullet(self.rect.left, self.rect.centery)
+                bullet2 = Bullet(self.rect.right, self.rect.centery)
+                missile1 = Missile(self.rect.centerx, self.rect.top) # Missile shoots from center of ship
+                all_sprites.add(bullet1)
+                all_sprites.add(bullet2)
+                all_sprites.add(missile1)
+                bullets.add(bullet1)
+                bullets.add(bullet2)
+                bullets.add(missile1)
+                shooting_sound.play()
+                missile_sound.play()
+
+    def powerup(self):
+        self.power += 1
+        self.power_time = pygame.time.get_ticks()
+
+    def hide(self):
+        self.hidden = True
+        self.hide_timer = pygame.time.get_ticks()
+        self.rect.center = (WIDTH / 2, HEIGHT + 200)
+
+
+# defines the enemies
+class Mob(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image_orig = random.choice(meteor_images)
+        self.image_orig.set_colorkey(BLACK)
+        self.image = self.image_orig.copy()
+        self.rect = self.image.get_rect()
+        self.radius = int(self.rect.width *.90 / 2)
+        self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+        self.rect.y = random.randrange(-150, -100)
+        self.speedy = random.randrange(5, 20)        ## for randomizing the speed of the Mob
+
+        ## randomize the movements a little more 
+        self.speedx = random.randrange(-3, 3)
+
+        ## adding rotation to the mob element
+        self.rotation = 0
+        self.rotation_speed = random.randrange(-8, 8)
+        self.last_update = pygame.time.get_ticks()  ## time when the rotation has to happen
+        
+    def rotate(self):
+        time_now = pygame.time.get_ticks()
+        if time_now - self.last_update > 50: # in milliseconds
+            self.last_update = time_now
+            self.rotation = (self.rotation + self.rotation_speed) % 360 
+            new_image = pygame.transform.rotate(self.image_orig, self.rotation)
+            old_center = self.rect.center
+            self.image = new_image
+            self.rect = self.image.get_rect()
+            self.rect.center = old_center
+
+    def update(self):
+        self.rotate()
+        self.rect.x += self.speedx
+        self.rect.y += self.speedy
+        ## now what if the mob element goes out of the screen
+
+        if (self.rect.top > HEIGHT + 10) or (self.rect.left < -25) or (self.rect.right > WIDTH + 20):
+            self.rect.x = random.randrange(0, WIDTH - self.rect.width)
+            self.rect.y = random.randrange(-100, -40)
+            self.speedy = random.randrange(1, 8)        ## for randomizing the speed of the Mob
+
+## defines the sprite for Powerups
+class Pow(pygame.sprite.Sprite):
+    def __init__(self, center):
+        pygame.sprite.Sprite.__init__(self)
+        self.type = random.choice(['shield', 'gun'])
+        self.image = powerup_images[self.type]
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        ## place the bullet according to the current position of the player
+        self.rect.center = center
+        self.speedy = 2
+
+    def update(self):
+        """should spawn right in front of the player"""
+        self.rect.y += self.speedy
+        ## kill the sprite after it moves over the top border
+        if self.rect.top > HEIGHT:
+            self.kill()
+
+            
+
+## defines the sprite for bullets
+class Bullet(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = bullet_img
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        ## place the bullet according to the current position of the player
+        self.rect.bottom = y 
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        """should spawn right in front of the player"""
+        self.rect.y += self.speedy
+        ## kill the sprite after it moves over the top border
+        if self.rect.bottom < 0:
+            self.kill()
+
+        ## now we need a way to shoot
+        ## lets bind it to "spacebar".
+        ## adding an event for it in Game loop
+
+## FIRE ZE MISSILES
+class Missile(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = missile_img
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.bottom = y
+        self.rect.centerx = x
+        self.speedy = -10
+
+    def update(self):
+        """should spawn right in front of the player"""
+        self.rect.y += self.speedy
+        if self.rect.bottom < 0:
+            self.kill()
+
+## Load all game images
+
+background = pygame.image.load(path.join(img_dir, 'background3.png')).convert()
+background_rect = background.get_rect()
+## ^^ draw this rect first 
+
+player_img = pygame.image.load(path.join(img_dir, 'ship.png')).convert()
+player_mini_img = pygame.transform.scale(player_img, (25, 19))
+player_mini_img.set_colorkey(BLACK)
+bullet_img = pygame.image.load(path.join(img_dir, 'laserRed16.png')).convert()
+missile_img = pygame.image.load(path.join(img_dir, 'missile.png')).convert_alpha()
+# meteor_img = pygame.image.load(path.join(img_dir, 'meteorBrown_med1.png')).convert()
+meteor_images = []
+meteor_list = [
+    'meteorbig.png',
+    'meteormed.png', 
+    'meteorsmall.png', 
+    'meteortiny.png',
+]
+
+for image in meteor_list:
+    meteor_images.append(pygame.image.load(path.join(img_dir, image)).convert())
+
+## meteor explosion
+explosion_anim = {}
+explosion_anim['lg'] = []
+explosion_anim['sm'] = []
+explosion_anim['player'] = []
+for i in range(9):
+    filename = 'regularExplosion0{}.png'.format(i)
+    img = pygame.image.load(path.join(img_dir, filename)).convert()
+    img.set_colorkey(BLACK)
+    ## resize the explosion
+    img_lg = pygame.transform.scale(img, (75, 75))
+    explosion_anim['lg'].append(img_lg)
+    img_sm = pygame.transform.scale(img, (32, 32))
+    explosion_anim['sm'].append(img_sm)
+
+    ## player explosion
+    filename = 'sonicExplosion0{}.png'.format(i)
+    img = pygame.image.load(path.join(img_dir, filename)).convert()
+    img.set_colorkey(BLACK)
+    explosion_anim['player'].append(img)
+
+## load power ups
+powerup_images = {}
+powerup_images['shield'] = pygame.image.load(path.join(img_dir, 'shield.png')).convert()
+powerup_images['gun'] = pygame.image.load(path.join(img_dir, 'gun.png')).convert()
+
+### Load all game sounds
+shooting_sound = pygame.mixer.Sound(path.join(sound_folder, 'shot.wav'))
+missile_sound = pygame.mixer.Sound(path.join(sound_folder, 'rocket.wav'))
+expl_sounds = []
+for sound in ['expl1.wav', 'expl2.wav']:
+    expl_sounds.append(pygame.mixer.Sound(path.join(sound_folder, sound)))
+## main background music
+#pygame.mixer.music.load(path.join(sound_folder, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
+pygame.mixer.music.set_volume(0.2)      ## simmered the sound down a little
+
+player_die_sound = pygame.mixer.Sound(path.join(sound_folder, 'explplayer.wav'))
+
+## Game loop
+running = True
+menu_display = True
+while running:
+    if menu_display:
+        main_menu()
+        pygame.time.wait(3000)
+
+        #Stop menu music
+        pygame.mixer.music.stop()
+        #Play the gameplay music
+        pygame.mixer.music.load(path.join(sound_folder, 'gameplay.wav'))
+        pygame.mixer.music.play(-1)     ## makes the gameplay sound in an endless loop
+        
+        menu_display = False
+        
+        ## group all the sprites together for ease of update
+        all_sprites = pygame.sprite.Group()
+        player = Player()
+        all_sprites.add(player)
+
+        ## spawn a group of mob
+        mobs = pygame.sprite.Group()
+        for i in range(8):      ## 8 mobs
+            # mob_element = Mob()
+            # all_sprites.add(mob_element)
+            # mobs.add(mob_element)
+            newmob()
+
+        ## group for bullets
+        bullets = pygame.sprite.Group()
+        powerups = pygame.sprite.Group()
+
+        #### Score board variable
+        score = 0
+        
+    #1 Process input/events
+    clock.tick(FPS)     ## will make the loop run at the same speed all the time
+    for event in pygame.event.get():        # gets all the events which have occured till now and keeps tab of them.
+        ## listening for the the X button at the top
         if event.type == pygame.QUIT:
-            run = False
-    
-    for bullet in bullets:
-        if player.left or player.right and bullet.x < 500 and bullet.x > 0:
-            bullet.x += bullet.vel
-        elif player.up or player.down and bullet.y < 500 and bullet.y > 0:
-            bullet.y += bullet.vel
-        else:
-            bullets.pop(bullets.index(bullet))
+            running = False
 
-    #This is where the tracking of key pressing and controlling the direction of the charachter happens
-    keys = pygame.key.get_pressed()
+        ## Press ESC to exit game
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                running = False
+        # ## event for shooting the bullets
+        # elif event.type == pygame.KEYDOWN:
+        #     if event.key == pygame.K_SPACE:
+        #         player.shoot()      ## we have to define the shoot()  function
 
-    if keys[pygame.K_SPACE]:
-        if player.left or player.up:
-            facing = -1
-        else:
-            facing = 1
+    #Update
+    all_sprites.update()
 
-        if len(bullets) < 100:
-            bullets.append(projectile(round(player.x + player.width // 2), round(player.y + player.height // 2), facing))
 
-    if keys[pygame.K_LEFT] and player.x > player.vel:
-        # player.x -= player.vel
-        scrollBackground(5,0)
-        player.left = True
-        player.right = False
-        player.up = False
-        player.down = False
+    ## check if a bullet hit a mob
+    ## now we have a group of bullets and a group of mob
+    hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
+    ## now as we delete the mob element when we hit one with a bullet, we need to respawn them again
+    ## as there will be no mob_elements left out 
+    for hit in hits:
+        score += 50 - hit.radius         ## give different scores for hitting big and small metoers
+        random.choice(expl_sounds).play()
+        # m = Mob()
+        # all_sprites.add(m)
+        # mobs.add(m)
+        expl = Explosion(hit.rect.center, 'lg')
+        all_sprites.add(expl)
+        if random.random() > 0.9:
+            pow = Pow(hit.rect.center)
+            all_sprites.add(pow)
+            powerups.add(pow)
+        newmob()        ## spawn a new mob
 
-    elif keys[pygame.K_RIGHT] and player.x < 500 - player.width - player.vel:
-        # player.x += player.vel
-        scrollBackground(-5,0)
-        player.left = False
-        player.right = True
-        player.up = False
-        player.down = False
+    ## check if the player collides with the mob
+    hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)        ## gives back a list, True makes the mob element disappear
+    for hit in hits:
+        player.shield -= hit.radius * 2
+        expl = Explosion(hit.rect.center, 'sm')
+        all_sprites.add(expl)
+        newmob()
+        if player.shield <= 0: 
+            player_die_sound.play()
+            death_explosion = Explosion(player.rect.center, 'player')
+            all_sprites.add(death_explosion)
+            player.hide()
+            player.lives -= 1
+            player.shield = 100
 
-    elif keys[pygame.K_UP] and player.y > player.vel:
-        # player.y -= player.vel
-        scrollBackground(0,5)
-        player.left = False
-        player.right = False
-        player.up = True
-        player.down = False
+    ## if the player hit a power up
+    hits = pygame.sprite.spritecollide(player, powerups, True)
+    for hit in hits:
+        if hit.type == 'shield':
+            player.shield += random.randrange(10, 30)
+            if player.shield >= 100:
+                player.shield = 100
+        if hit.type == 'gun':
+            player.powerup()
 
-    elif keys[pygame.K_DOWN] and player.y < 500 - player.height - player.vel:
-        # player.y += player.vel
-        scrollBackground(0,-5)
-        player.left = False
-        player.right = False
-        player.up = False
-        player.down = True
+    if player.rect.right > WIDTH:
+        player_die_sound.play()
+        death_explosion = Explosion(player.rect.center, 'player')
+        all_sprites.add(death_explosion)
+        player.lives -= 1
+        player.shield = 100
+    if player.rect.left < 0:
+        player_die_sound.play()
+        death_explosion = Explosion(player.rect.center, 'player')
+        all_sprites.add(death_explosion)
+        player.lives -= 1
+        player.shield = 100
+    if player.rect.top > HEIGHT:
+        player_die_sound.play()
+        death_explosion = Explosion(player.rect.center, 'player')
+        all_sprites.add(death_explosion)
+        player.lives -= 1
+        player.shield = 100
+    if player.rect.bottom < 0:
+        player_die_sound.play()
+        death_explosion = Explosion(player.rect.center, 'player')
+        all_sprites.add(death_explosion)
+        player.lives -= 1
+        player.shield = 100
 
-    else:
-        player.walkCount = 0
-    
-    redrawGameWindow()
+
+
+    ## if player died and the explosion has finished, end game
+    if player.lives == 0 and not death_explosion.alive():
+        running = False
+        # menu_display = True
+        # pygame.display.update()
+
+    #3 Draw/render
+    screen.fill(BLACK)
+    ## draw the stargaze.png image
+    screen.blit(background, background_rect)
+
+    all_sprites.draw(screen)
+    draw_text(screen, str(score), 18, WIDTH / 2, 10)     ## 10px down from the screen
+    draw_shield_bar(screen, 5, 5, player.shield)
+
+    # Draw lives
+    draw_lives(screen, WIDTH - 100, 5, player.lives, player_mini_img)
+
+    ## Done after drawing everything to the screen
+    pygame.display.flip()       
 
 pygame.quit()
